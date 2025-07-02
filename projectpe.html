@@ -69,51 +69,53 @@
   </footer>
 
   <script>
-    const images = {
-      new: [
-        'https://drive.google.com/uc?export=view&id=16L9mP7h59qWS6cNIiyXWOBVIRKEXwB8R',
-        'https://drive.google.com/uc?export=view&id=1RDWBcbVds6Jc18O5Wngjhq2UCi4pedUA',
-        'https://drive.google.com/uc?export=view&id=1m8Q7uC1SkNm4JG3aCg17HQW0b9Z9FiUc',
-        'https://drive.google.com/uc?export=view&id=19w2O4EU5xZOJlvHex1ATOYnuKgBpQyVy',
-        'https://drive.google.com/uc?export=view&id=1ISXfD8FxZXkdUEkYvbGTsMZQzEzbD44a',
-        'https://drive.google.com/uc?export=view&id=13RRsx1ohIoh2DE22dA7DYDBUeY_CA3r0',
-        'https://drive.google.com/uc?export=view&id=1ntuKpgtCSdZmiZHet0GzCmn3k0-72dD1',
-        'https://drive.google.com/uc?export=view&id=1ws0xgyO8nnnVIPhbgnXI129u8BaziwvQ'
-      ],
-      old: [
-        'https://drive.google.com/uc?export=view&id=1QuM-rNAub-cDCKtORwCPZbs-9ssuLxRY',
-        'https://drive.google.com/uc?export=view&id=1EZwyTXKIm3eFriVfZgM_DRLj-2mqwwVP',
-        'https://drive.google.com/uc?export=view&id=1_k2KsJNpEJyFAkbZSi94vwhZbvy2MYwk',
-        'https://drive.google.com/uc?export=view&id=1rHbZp55QSmyyPU-pIqytLb-C7_l4j9hQ',
-        'https://drive.google.com/uc?export=view&id=1Jd2D1alOMeIAnCpQqfvjKKTjWRa5OOH1',
-        'https://drive.google.com/uc?export=view&id=1r9Sx77lvqatGqERrxWwh5qNdxtYDxRGW',
-        'https://drive.google.com/uc?export=view&id=1h27w96ukr7tOTmQwAhBFnn39YlhqhBJp',
-        'https://drive.google.com/uc?export=view&id=1oVDXnfd4ERMHq0K_VkOeAdmO6IDpanqp'
-      ]
-    };
+  const images = {
+    new: [
+      'https://drive.google.com/uc?export=view&id=16L9mP7h59qWS6cNIiyXWOBVIRKEXwB8R',
+      'https://drive.google.com/uc?export=view&id=1RDWBcbVds6Jc18O5Wngjhq2UCi4pedUA',
+      'https://drive.google.com/uc?export=view&id=1m8Q7uC1SkNm4JG3aCg17HQW0b9Z9FiUc',
+      'https://drive.google.com/uc?export=view&id=19w2O4EU5xZOJlvHex1ATOYnuKgBpQyVy',
+      'https://drive.google.com/uc?export=view&id=1ISXfD8FxZXkdUEkYvbGTsMZQzEzbD44a',
+      'https://drive.google.com/uc?export=view&id=13RRsx1ohIoh2DE22dA7DYDBUeY_CA3r0',
+      'https://drive.google.com/uc?export=view&id=1ntuKpgtCSdZmiZHet0GzCmn3k0-72dD1',
+      'https://drive.google.com/uc?export=view&id=1ws0xgyO8nnnVIPhbgnXI129u8BaziwvQ'
+    ],
+    old: [
+      'https://drive.google.com/uc?export=view&id=1QuM-rNAub-cDCKtORwCPZbs-9ssuLxRY',
+      'https://drive.google.com/uc?export=view&id=1EZwyTXKIm3eFriVfZgM_DRLj-2mqwwVP',
+      'https://drive.google.com/uc?export=view&id=1_k2KsJNpEJyFAkbZSi94vwhZbvy2MYwk',
+      'https://drive.google.com/uc?export=view&id=1rHbZp55QSmyyPU-pIqytLb-C7_l4j9hQ',
+      'https://drive.google.com/uc?export=view&id=1Jd2D1alOMeIAnCpQqfvjKKTjWRa5OOH1',
+      'https://drive.google.com/uc?export=view&id=1r9Sx77lvqatGqERrxWwh5qNdxtYDxRGW',
+      'https://drive.google.com/uc?export=view&id=1h27w96ukr7tOTmQwAhBFnn39YlhqhBJp',
+      'https://drive.google.com/uc?export=view&id=1oVDXnfd4ERMHq0K_VkOeAdmO6IDpanqp'
+    ]
+  };
 
-    function loadImages(type) {
-  const gallery = document.getElementById('gallery');
-  const title = document.getElementById('galleryTitle');
+  function loadImages(type) {
+    const gallery = document.getElementById('gallery');
+    const title = document.getElementById('galleryTitle');
 
-  title.textContent = type === 'new' ? 'Edited Photos' : 'Original Photos';
-  gallery.innerHTML = '';
+    title.textContent = type === 'new' ? 'Edited Photos' : 'Original Photos';
+    gallery.innerHTML = '';
 
-  images[type].forEach(img => {
-    const col = document.createElement('div');
-    col.className = 'col';
-    col.innerHTML = `
-      <div class="card">
-        <img src="${img}" alt="photo" />
-      </div>`;
-    gallery.appendChild(col);
-  });
-}
+    images[type].forEach(img => {
+      const col = document.createElement('div');
+      col.className = 'col';
 
+      col.innerHTML = `
+        <div class="card shadow-sm">
+          <img src="${img}" alt="photo" onerror="this.src='https://via.placeholder.com/400x300?text=Image+Not+Found'" />
+        </div>`;
+      
+      gallery.appendChild(col);
+    });
+  }
 
-    // Load "Edited" by default on page load
-    window.onload = () => loadImages('new');
-  </script>
+  // Load "Edited" images on page load
+  window.onload = () => loadImages('new');
+</script>
+
 
 
   </body>
