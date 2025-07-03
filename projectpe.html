@@ -49,9 +49,24 @@
       background-color: #000;
     }
 
+    .modal-body {
+      position: relative;
+      min-height: 400px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
     .modal-body img {
       width: 100%;
       border-radius: 10px;
+      display: none; /* Hide initially, show after loading */
+    }
+
+    .spinner-border {
+      width: 3rem;
+      height: 3rem;
+      color: white;
     }
   </style>
 </head>
@@ -81,10 +96,11 @@
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
       <div class="modal-header border-0">
-        <h5 class="modal-title text-white">Original Photo</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        <h5 class="modal-title text-white" id="modalTitle">Original Photo</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
+        <div id="loadingSpinner" class="spinner-border" role="status" aria-hidden="true"></div>
         <img id="originalImage" src="" alt="Original Photo">
       </div>
     </div>
@@ -112,7 +128,7 @@
     col.className = 'col';
     col.innerHTML = `
       <div class="card" onclick="showOriginal('${img}')">
-        <img src="new/${img}" alt="${img}" 
+        <img src="new/${img}" alt="Edited version of ${img}" 
           onerror="this.onerror=null; this.src='https://via.placeholder.com/400x300?text=Edited+Not+Found';">
       </div>`;
     gallery.appendChild(col);
@@ -120,9 +136,34 @@
 
   function showOriginal(filename) {
     const originalImg = document.getElementById('originalImage');
-    originalImg.src = `old/${filename}`;
+    const loadingSpinner = document.getElementById('loadingSpinner');
+    const modalTitle = document.getElementById('modalTitle');
+    originalImg.style.display = 'none';       // hide old image
+    loadingSpinner.style.display = 'inline-block'; // show spinner
+    modalTitle.textContent = `Original Photo - ${filename}`;
+    originalImg.alt = `Original version of ${filename}`;
+
+    // Show the modal immediately
     const modal = new bootstrap.Modal(document.getElementById('originalModal'));
     modal.show();
+
+    // Clear src to reset image load event
+    originalImg.src = '';
+
+    originalImg.onload = () => {
+      loadingSpinner.style.display = 'none';
+      originalImg.style.display = 'block';
+    };
+
+    originalImg.onerror = () => {
+      loadingSpinner.style.display = 'none';
+      originalImg.style.display = 'block';
+      originalImg.src = 'https://via.placeholder.com/600x400?text=Original+Not+Found';
+      originalImg.alt = 'Original photo not found';
+    };
+
+    // Start loading the original image
+    originalImg.src = `old/${filename}`;
   }
 </script>
 
