@@ -37,36 +37,26 @@
       border-radius: 10px;
       overflow: hidden;
       cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    .card:hover {
+      transform: scale(1.05);
     }
 
     .card img {
       width: 100%;
       height: auto;
       object-fit: cover;
-    }
-
-    .modal-content {
-      background-color: #000;
-    }
-
-    .modal-body {
-      position: relative;
-      min-height: 400px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .modal-body img {
-      width: 100%;
+      display: block;
       border-radius: 10px;
-      display: none; /* Hide initially, show after loading */
     }
 
-    .spinner-border {
-      width: 3rem;
-      height: 3rem;
-      color: white;
+    .caption {
+      text-align: center;
+      margin-top: 0.5rem;
+      color: #222;
+      font-weight: 600;
     }
   </style>
 </head>
@@ -79,7 +69,7 @@
   </div>
 
   <h1>Photo Enhancing Project</h1>
-  <p>Click an edited photo to view its original version</p>
+  <p>Click an edited photo to toggle between edited and original version</p>
 </header>
 
 <main class="container my-5">
@@ -90,24 +80,6 @@
 <footer>
   <p>&copy; 2024 Carlo J. Baleje. All Rights Reserved.</p>
 </footer>
-
-<!-- Modal -->
-<div class="modal fade" id="originalModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-lg">
-    <div class="modal-content">
-      <div class="modal-header border-0">
-        <h5 class="modal-title text-white" id="modalTitle">Original Photo</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <div id="loadingSpinner" class="spinner-border" role="status" aria-hidden="true"></div>
-        <img id="originalImage" src="" alt="Original Photo">
-      </div>
-    </div>
-  </div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
   const images = [
@@ -121,50 +93,61 @@
     'IMG_3174.jpg'
   ];
 
+  // Google Drive URL for IMG_3163.jpg
+  const specialOriginalLinks = {
+    'IMG_3163.jpg': 'https://drive.google.com/file/d/1QuM-rNAub-cDCKtORwCPZbs-9ssuLxRY/view?usp=drive_link'
+  };
+
   const gallery = document.getElementById('gallery');
 
-  images.forEach(img => {
+  images.forEach(filename => {
     const col = document.createElement('div');
     col.className = 'col';
-    col.innerHTML = `
-      <div class="card" onclick="showOriginal('${img}')">
-        <img src="new/${img}" alt="Edited version of ${img}" 
-          onerror="this.onerror=null; this.src='https://via.placeholder.com/400x300?text=Edited+Not+Found';">
-      </div>`;
+
+    const card = document.createElement('div');
+    card.className = 'card';
+
+    const img = document.createElement('img');
+    img.src = `new/${filename}`;
+    img.alt = `Edited version of ${filename}`;
+    img.dataset.editedSrc = img.src;
+    img.dataset.originalSrc = `old/${filename}`;
+    img.dataset.isOriginal = 'false';
+
+    img.onerror = () => {
+      img.src = 'https://via.placeholder.com/400x300?text=Edited+Not+Found';
+    };
+
+    card.appendChild(img);
+
+    const caption = document.createElement('div');
+    caption.className = 'caption';
+    caption.textContent = 'Edited Photo';
+
+    col.appendChild(card);
+    col.appendChild(caption);
     gallery.appendChild(col);
+
+    card.addEventListener('click', () => {
+      // If clicked image is the special one, open Drive link in new tab
+      if (filename === 'IMG_3163.jpg') {
+        window.open(specialOriginalLinks[filename], '_blank');
+        return;
+      }
+
+      if (img.dataset.isOriginal === 'false') {
+        img.src = img.dataset.originalSrc;
+        img.alt = `Original version of ${filename}`;
+        caption.textContent = 'Original Photo';
+        img.dataset.isOriginal = 'true';
+      } else {
+        img.src = img.dataset.editedSrc;
+        img.alt = `Edited version of ${filename}`;
+        caption.textContent = 'Edited Photo';
+        img.dataset.isOriginal = 'false';
+      }
+    });
   });
-
-  function showOriginal(filename) {
-    const originalImg = document.getElementById('originalImage');
-    const loadingSpinner = document.getElementById('loadingSpinner');
-    const modalTitle = document.getElementById('modalTitle');
-    originalImg.style.display = 'none';       // hide old image
-    loadingSpinner.style.display = 'inline-block'; // show spinner
-    modalTitle.textContent = `Original Photo - ${filename}`;
-    originalImg.alt = `Original version of ${filename}`;
-
-    // Show the modal immediately
-    const modal = new bootstrap.Modal(document.getElementById('originalModal'));
-    modal.show();
-
-    // Clear src to reset image load event
-    originalImg.src = '';
-
-    originalImg.onload = () => {
-      loadingSpinner.style.display = 'none';
-      originalImg.style.display = 'block';
-    };
-
-    originalImg.onerror = () => {
-      loadingSpinner.style.display = 'none';
-      originalImg.style.display = 'block';
-      originalImg.src = 'https://via.placeholder.com/600x400?text=Original+Not+Found';
-      originalImg.alt = 'Original photo not found';
-    };
-
-    // Start loading the original image
-    originalImg.src = `old/${IMG_3163.jpg}`;
-  }
 </script>
 
 </body>
