@@ -69,58 +69,51 @@
   </footer>
 
   <script>
-  const images = {
-    new: [
-      'IMG_3163.jpg',
-      'IMG_3164.jpg',
-      'IMG_3165.jpg',
-      'IMG_3168.jpg',
-      'IMG_3169.jpg',
-      'IMG_3172.jpg',
-      'IMG_3173.jpg',
-      'IMG_3174.jpg'
-    ],
-    old: [
-      'IMG_3163.jpg',
-      'IMG_3164.jpg',
-      'IMG_3165.jpg',
-      'IMG_3168.jpg',
-      'IMG_3169.jpg',
-      'IMG_3172.jpg',
-      'IMG_3173.jpg',
-      'IMG_3174.jpg'
-    ]
-  };
+    const images = {
+      new: [
+        'IMG_3163.jpg',
+        'IMG_3164.jpg',
+        'IMG_3165.jpg',
+        'IMG_3168.jpg',
+        'IMG_3169.jpg',
+        'IMG_3172.jpg',
+        'IMG_3173.jpg',
+        'IMG_3174.jpg'
+      ],
+      old: [
+        'IMG_3163.jpg',
+        'IMG_3164.jpg',
+        'IMG_3165.jpg',
+        'IMG_3168.jpg',
+        'IMG_3169.jpg',
+        'IMG_3172.jpg',
+        'IMG_3173.jpg',
+        'IMG_3174.jpg'
+      ]
+    };
 
-  function loadImages(type) {
-    const folder = `${type}/`; // will be "new/" or "old/"
-    const gallery = document.getElementById('gallery');
-    const title = document.getElementById('galleryTitle');
+    function loadImages(type) {
+      const folder = `${type}/`;
+      const gallery = document.getElementById('gallery');
+      const title = document.getElementById('galleryTitle');
 
-    title.textContent = type === 'new' ? 'Edited Photos' : 'Original Photos';
-    gallery.innerHTML = '';
+      title.textContent = type === 'new' ? 'Edited Photos' : 'Original Photos';
+      gallery.innerHTML = '';
 
-    images[type].forEach(img => {
-      const col = document.createElement('div');
-      col.className = 'col';
-      const imageSrc = `${folder}${img}`;
-      col.innerHTML = `
-        <div class="card">
-          <img src="${imageSrc}" alt="${img}" onerror="this.src='https://via.placeholder.com/400x300?text=Not+Found'">
-        </div>`;
-      gallery.appendChild(col);
-    });
-  }
+      images[type].forEach(img => {
+        const col = document.createElement('div');
+        col.className = 'col';
+        col.innerHTML = `
+          <div class="card">
+            <img src="${folder}${img}" alt="${img}">
+          </div>`;
+        gallery.appendChild(col);
+      });
+    }
 
-  // Load "Edited" by default on page load
-  window.onload = () => loadImages('new');
-</script>
-
-
-  // Load "Edited" by default on page load
-  window.onload = () => loadImages('new');
-</script>
-
+    // Load "Edited" by default on page load
+    window.onload = () => loadImages('new');
+  </script>
 
 
   </body>
