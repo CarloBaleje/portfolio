@@ -69,7 +69,7 @@
   </div>
 
   <h1>Photo Enhancing Project</h1>
-  <p>Click an edited photo to toggle between edited and original version</p>
+  <p>Click an edited photo to toggle between edited and original version or open Drive link if available</p>
 </header>
 
 <main class="container my-5">
@@ -93,16 +93,16 @@
     'IMG_3174.jpg'
   ];
 
-  // Google Drive URL for IMG_3163.jpg
+  // Google Drive URLs for each image
   const specialOriginalLinks = {
-  'IMG_3163.jpg': 'https://drive.google.com/file/d/1QuM-rNAub-cDCKtORwCPZbs-9ssuLxRY/view?usp=drive_link',
-  'IMG_3164.jpg': 'https://drive.google.com/file/d/1EZwyTXKIm3eFriVfZgM_DRLj-2mqwwVP/view?usp=drive_link',
-  'IMG_3165.jpg': 'https://drive.google.com/file/d/1_k2KsJNpEJyFAkbZSi94vwhZbvy2MYwk/view?usp=drive_link',
-  'IMG_3168.jpg': 'https://drive.google.com/file/d/1rHbZp55QSmyyPU-pIqytLb-C7_l4j9hQ/view?usp=drive_link',
-  'IMG_3169.jpg': 'https://drive.google.com/file/d/1Jd2D1alOMeIAnCpQqfvjKKTjWRa5OOH1/view?usp=drive_link',
-  'IMG_3172.jpg': 'https://drive.google.com/file/d/1r9Sx77lvqatGqERrxWwh5qNdxtYDxRGW/view?usp=drive_link',
-  'IMG_3173.jpg': 'https://drive.google.com/file/d/1h27w96ukr7tOTmQwAhBFnn39YlhqhBJp/view?usp=drive_link',
-  'IMG_3174.jpg': 'https://drive.google.com/file/d/1oVDXnfd4ERMHq0K_VkOeAdmO6IDpanqp/view?usp=drive_link'
+    'IMG_3163.jpg': 'https://drive.google.com/file/d/1QuM-rNAub-cDCKtORwCPZbs-9ssuLxRY/view?usp=drive_link',
+    'IMG_3164.jpg': 'https://drive.google.com/file/d/1EZwyTXKIm3eFriVfZgM_DRLj-2mqwwVP/view?usp=drive_link',
+    'IMG_3165.jpg': 'https://drive.google.com/file/d/1_k2KsJNpEJyFAkbZSi94vwhZbvy2MYwk/view?usp=drive_link',
+    'IMG_3168.jpg': 'https://drive.google.com/file/d/1rHbZp55QSmyyPU-pIqytLb-C7_l4j9hQ/view?usp=drive_link',
+    'IMG_3169.jpg': 'https://drive.google.com/file/d/1Jd2D1alOMeIAnCpQqfvjKKTjWRa5OOH1/view?usp=drive_link',
+    'IMG_3172.jpg': 'https://drive.google.com/file/d/1r9Sx77lvqatGqERrxWwh5qNdxtYDxRGW/view?usp=drive_link',
+    'IMG_3173.jpg': 'https://drive.google.com/file/d/1h27w96ukr7tOTmQwAhBFnn39YlhqhBJp/view?usp=drive_link',
+    'IMG_3174.jpg': 'https://drive.google.com/file/d/1oVDXnfd4ERMHq0K_VkOeAdmO6IDpanqp/view?usp=drive_link'
   };
 
   const gallery = document.getElementById('gallery');
@@ -136,12 +136,13 @@
     gallery.appendChild(col);
 
     card.addEventListener('click', () => {
-      // If clicked image is the special one, open Drive link in new tab
-      if (filename === 'IMG_3163.jpg') {
+      // If Drive link exists for this image, open it in a new tab
+      if (specialOriginalLinks.hasOwnProperty(filename)) {
         window.open(specialOriginalLinks[filename], '_blank');
-        return;
+        return; // Stop toggling
       }
 
+      // Otherwise toggle between edited and original local images
       if (img.dataset.isOriginal === 'false') {
         img.src = img.dataset.originalSrc;
         img.alt = `Original version of ${filename}`;
