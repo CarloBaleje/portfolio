@@ -36,12 +36,22 @@
       background: white;
       border-radius: 10px;
       overflow: hidden;
+      cursor: pointer;
     }
 
     .card img {
       width: 100%;
       height: auto;
       object-fit: cover;
+    }
+
+    .modal-content {
+      background-color: #000;
+    }
+
+    .modal-body img {
+      width: 100%;
+      border-radius: 10px;
     }
   </style>
 </head>
@@ -54,9 +64,7 @@
   </div>
 
   <h1>Photo Enhancing Project</h1>
-  <p>View Enhanced or Original Photos</p>
-  <button class="btn btn-primary mx-1" onclick="loadImages('new')">Edited</button>
-  <button class="btn btn-secondary mx-1" onclick="loadImages('old')">Original</button>
+  <p>Click an edited photo to view its original version</p>
 </header>
 
 <main class="container my-5">
@@ -68,52 +76,54 @@
   <p>&copy; 2024 Carlo J. Baleje. All Rights Reserved.</p>
 </footer>
 
+<!-- Modal -->
+<div class="modal fade" id="originalModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header border-0">
+        <h5 class="modal-title text-white">Original Photo</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <img id="originalImage" src="" alt="Original Photo">
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
 <script>
-  const images = {
-    new: [
-      'IMG_3163.jpg',
-      'IMG_3164.jpg',
-      'IMG_3165.jpg',
-      'IMG_3168.jpg',
-      'IMG_3169.jpg',
-      'IMG_3172.jpg',
-      'IMG_3173.jpg',
-      'IMG_3174.jpg'
-    ],
-    old: [
-      'IIMG_3163.jpg',
-      'IIMG_3164.jpg',
-      'IIMG_3165.jpg',
-      'IIMG_3168.jpg',
-      'IIMG_3169.jpg',
-      'IIMG_3172.jpg',
-      'IIMG_3173.jpg',
-      'IIMG_3174.jpg'
-    ]
-  };
+  const images = [
+    'IMG_3163.jpg',
+    'IMG_3164.jpg',
+    'IMG_3165.jpg',
+    'IMG_3168.jpg',
+    'IMG_3169.jpg',
+    'IMG_3172.jpg',
+    'IMG_3173.jpg',
+    'IMG_3174.jpg'
+  ];
 
-  function loadImages(type) {
-    const folder = `${type}/`; // now points to 'new/' or 'old/' only
-    const gallery = document.getElementById('gallery');
-    const title = document.getElementById('galleryTitle');
+  const gallery = document.getElementById('gallery');
 
-    title.textContent = type === 'new' ? 'Edited Photos' : 'Original Photos';
-    gallery.innerHTML = '';
+  images.forEach(img => {
+    const col = document.createElement('div');
+    col.className = 'col';
+    col.innerHTML = `
+      <div class="card" onclick="showOriginal('${img}')">
+        <img src="new/${img}" alt="${img}" 
+          onerror="this.onerror=null; this.src='https://via.placeholder.com/400x300?text=Edited+Not+Found';">
+      </div>`;
+    gallery.appendChild(col);
+  });
 
-    images[type].forEach(img => {
-      const col = document.createElement('div');
-      col.className = 'col';
-      col.innerHTML = `
-        <div class="card">
-          <img src="${folder}${img}" alt="${img}" 
-               onerror="this.onerror=null; this.src='https://via.placeholder.com/400x300?text=Not+Found';">
-        </div>`;
-      gallery.appendChild(col);
-    });
+  function showOriginal(filename) {
+    const originalImg = document.getElementById('originalImage');
+    originalImg.src = `old/${filename}`;
+    const modal = new bootstrap.Modal(document.getElementById('originalModal'));
+    modal.show();
   }
-
-  // Load Edited by default
-  window.onload = () => loadImages('new');
 </script>
 
 </body>
