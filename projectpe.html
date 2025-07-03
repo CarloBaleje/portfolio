@@ -69,7 +69,6 @@
   </footer>
 
   <script>
-  const basePath = window.location.origin + window.location.pathname.replace(/[^/]*$/, '');
   const images = {
     new: [
       'IMG_3163.jpg',
@@ -94,7 +93,7 @@
   };
 
   function loadImages(type) {
-    const folder = `${type}/`;
+    const folder = `${type}/`; // will be "new/" or "old/"
     const gallery = document.getElementById('gallery');
     const title = document.getElementById('galleryTitle');
 
@@ -104,7 +103,7 @@
     images[type].forEach(img => {
       const col = document.createElement('div');
       col.className = 'col';
-      const imageSrc = `${basePath}${folder}${img}`;
+      const imageSrc = `${folder}${img}`;
       col.innerHTML = `
         <div class="card">
           <img src="${imageSrc}" alt="${img}" onerror="this.src='https://via.placeholder.com/400x300?text=Not+Found'">
@@ -112,6 +111,11 @@
       gallery.appendChild(col);
     });
   }
+
+  // Load "Edited" by default on page load
+  window.onload = () => loadImages('new');
+</script>
+
 
   // Load "Edited" by default on page load
   window.onload = () => loadImages('new');
